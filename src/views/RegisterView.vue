@@ -6,6 +6,7 @@ import { BookOpen } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const router = useRouter();
+const allowRegistration = import.meta.env.VITE_ENABLE_REGISTER !== 'false';
 
 const name = ref('');
 const email = ref('');
@@ -56,7 +57,24 @@ async function handleSubmit() {
       <p class="mt-2 text-sm text-slate-600 dark:text-[#94a3b8]">Organize seus livros e resenhas com total privacidade no BookTrack</p>
     </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div v-if="!allowRegistration" class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div class="bg-white dark:bg-[#131b2e] py-8 px-6 shadow-md rounded-2xl border border-[#e2e8f0] dark:border-[#1e293b] text-center space-y-4 sm:px-10 transition-colors duration-200">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-[#f8fafc]">Cadastros Desativados</h3>
+        <p class="text-sm text-slate-600 dark:text-[#94a3b8] leading-relaxed">
+          Novos cadastros de usuários estão temporariamente desativados no sistema.
+        </p>
+        <div class="pt-2">
+          <RouterLink
+            to="/login"
+            class="inline-flex justify-center w-full py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 transition-colors"
+          >
+            Ir para o Login
+          </RouterLink>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white dark:bg-[#131b2e] py-8 px-6 shadow-md rounded-2xl border border-[#e2e8f0] dark:border-[#1e293b] sm:px-10 transition-colors duration-200">
         <form class="space-y-4" @submit.prevent="handleSubmit">
           <div v-if="error" class="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-sm rounded-lg">

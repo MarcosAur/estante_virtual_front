@@ -6,6 +6,7 @@ import { BookOpen } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const router = useRouter();
+const allowRegistration = import.meta.env.VITE_ENABLE_REGISTER !== 'false';
 
 const email = ref('');
 const password = ref('');
@@ -87,11 +88,14 @@ async function handleSubmit() {
           </div>
         </form>
 
-        <div class="mt-6 text-center text-sm">
+        <div v-if="allowRegistration" class="mt-6 text-center text-sm">
           <span class="text-slate-500 dark:text-[#94a3b8]">Ainda não tem conta? </span>
           <RouterLink to="/registro" class="font-medium text-emerald-600 dark:text-emerald-400 hover:underline">
             Cadastre-se gratuitamente
           </RouterLink>
+        </div>
+        <div v-else class="mt-6 text-center text-xs text-slate-400 dark:text-[#94a3b8]">
+          Novos cadastros estão temporariamente suspensos.
         </div>
       </div>
     </div>

@@ -76,6 +76,11 @@ const router = createRouter({
 
 router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore();
+  const allowRegistration = import.meta.env.VITE_ENABLE_REGISTER !== 'false';
+
+  if (to.name === 'register' && !allowRegistration) {
+    return next({ name: 'login' });
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     return next({ name: 'login' });
