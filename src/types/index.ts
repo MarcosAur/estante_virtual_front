@@ -1,4 +1,5 @@
 export type BookStatus = 'want_to_read' | 'reading' | 'read';
+export type MovieStatus = 'want_to_watch' | 'watching' | 'watched';
 
 export interface User {
   id: number;
@@ -12,6 +13,7 @@ export interface Tag {
   name: string;
   color: string;
   books_count?: number;
+  movies_count?: number;
   created_at?: string;
 }
 
@@ -29,6 +31,23 @@ export interface Review {
     title: string;
     author: string;
     cover_path: string | null;
+  };
+}
+
+export interface MovieReview {
+  id: string;
+  movie_id: string;
+  rating: number;
+  title: string | null;
+  body: string;
+  has_spoiler: boolean;
+  created_at: string;
+  updated_at: string;
+  movie?: {
+    id: string;
+    title: string;
+    director: string | null;
+    poster_path: string | null;
   };
 }
 
@@ -54,6 +73,25 @@ export interface Book {
   tags?: Tag[];
 }
 
+export interface Movie {
+  id: string;
+  title: string;
+  director: string | null;
+  year: number | null;
+  runtime_minutes: number;
+  genre: string | null;
+  synopsis: string | null;
+  poster_path: string | null;
+  poster_url: string | null;
+  tmdb_id: string | null;
+  status: MovieStatus;
+  watched_at: string | null;
+  created_at?: string;
+  updated_at?: string;
+  review?: MovieReview | null;
+  tags?: Tag[];
+}
+
 export interface Stats {
   year: number;
   total_books: number;
@@ -67,6 +105,18 @@ export interface Stats {
     want_to_read: number;
   };
   ratings_distribution: Record<string, number>;
+
+  // Movies
+  total_movies?: number;
+  movies_watched_this_year?: number;
+  movies_average_rating?: number;
+  movies_reviews_count?: number;
+  movie_status_counts?: {
+    watching: number;
+    watched: number;
+    want_to_watch: number;
+  };
+  movie_ratings_distribution?: Record<string, number>;
 }
 
 export interface ExternalBookLookup {
@@ -78,4 +128,15 @@ export interface ExternalBookLookup {
   synopsis: string | null;
   isbn: string | null;
   cover_url: string | null;
+}
+
+export interface ExternalMovieLookup {
+  tmdb_id: string;
+  title: string;
+  director: string | null;
+  year: number | null;
+  runtime_minutes: number;
+  genre: string | null;
+  synopsis: string | null;
+  poster_url: string | null;
 }

@@ -6,6 +6,7 @@ import { tagsApi } from '@/api/tags';
 import { useBooksStore } from '@/stores/books';
 import type { BookStatus, ExternalBookLookup, Tag } from '@/types';
 import { Search, Sparkles, ArrowLeft, Check, Upload, Trash2 } from 'lucide-vue-next';
+import AuthImage from '@/components/AuthImage.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -334,7 +335,7 @@ async function handleSubmit() {
           <!-- Preview if photo is selected or exists -->
           <div v-if="coverPreviewUrl || existingCoverUrl" class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
             <div class="relative w-28 aspect-[2/3] rounded-lg overflow-hidden shadow-sm border border-slate-200 dark:border-[#31394d] bg-slate-100 dark:bg-[#131b2e] shrink-0">
-              <img
+              <AuthImage
                 :src="coverPreviewUrl || existingCoverUrl!"
                 alt="Prévia da foto"
                 class="w-full h-full object-cover"

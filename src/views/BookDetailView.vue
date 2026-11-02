@@ -5,6 +5,7 @@ import { useBooksStore } from '@/stores/books';
 import { reviewsApi } from '@/api/reviews';
 import StarRating from '@/components/StarRating.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
+import AuthImage from '@/components/AuthImage.vue';
 import type { BookStatus } from '@/types';
 import {
   Upload,
@@ -163,7 +164,7 @@ async function handleDeleteBook() {
         <!-- Left: Cover + Upload -->
         <div class="w-full md:w-56 shrink-0 flex flex-col items-center">
           <div class="relative w-48 aspect-[2/3] rounded-xl overflow-hidden shadow-md bg-slate-100 dark:bg-[#1e293b] border border-[#e2e8f0] dark:border-[#1e293b]">
-            <img
+            <AuthImage
               v-if="book.cover_url"
               :src="book.cover_url"
               :alt="book.title"

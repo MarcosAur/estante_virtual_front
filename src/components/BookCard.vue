@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router';
 import type { Book } from '@/types';
 import StarRating from './StarRating.vue';
 import ProgressBar from './ProgressBar.vue';
+import AuthImage from './AuthImage.vue';
 
 const props = defineProps<{
   book: Book;
@@ -46,12 +47,11 @@ const coverSrc = computed(() => {
   >
     <!-- Cover Container -->
     <div class="relative w-full aspect-[2/3] bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center overflow-hidden border-b border-[#e2e8f0] dark:border-[#1e293b]">
-      <img
+      <AuthImage
         v-if="coverSrc"
         :src="coverSrc"
         :alt="book.title"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        loading="lazy"
       />
       <!-- Placeholder when no cover exists -->
       <div

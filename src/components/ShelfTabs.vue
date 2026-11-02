@@ -1,29 +1,29 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 const props = defineProps<{
   activeTab: string;
-  counts?: {
-    total?: number;
-    reading?: number;
-    want_to_read?: number;
-    read?: number;
-  };
+  tabs?: { key: string; label: string }[];
+  counts?: Record<string, number | undefined>;
 }>();
 
 const emit = defineEmits<{
   (e: 'update:activeTab', val: string): void;
 }>();
 
-const tabs = [
+const defaultTabs = [
   { key: '', label: 'Todos' },
   { key: 'reading', label: 'Lendo' },
   { key: 'want_to_read', label: 'Quero ler' },
   { key: 'read', label: 'Lidos' },
 ];
 
+const availableTabs = computed(() => props.tabs && props.tabs.length > 0 ? props.tabs : defaultTabs);
+
 function getCount(key: string) {
   if (!props.counts) return null;
   if (!key) return props.counts.total ?? null;
-  return (props.counts as any)[key] ?? null;
+  return props.counts[key] ?? null;
 }
 </script>
 
@@ -31,7 +31,7 @@ function getCount(key: string) {
   <div class="border-b border-[#e2e8f0] dark:border-[#1e293b]">
     <nav class="flex space-x-2 sm:space-x-6 overflow-x-auto py-2 no-scrollbar" aria-label="Tabs">
       <button
-        v-for="tab in tabs"
+        v-for="tab in availableTabs"
         :key="tab.key"
         @click="emit('update:activeTab', tab.key)"
         class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-1.5 cursor-pointer"

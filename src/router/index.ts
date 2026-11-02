@@ -5,6 +5,9 @@ import DashboardView from '@/views/DashboardView.vue';
 import ShelfView from '@/views/ShelfView.vue';
 import BookDetailView from '@/views/BookDetailView.vue';
 import BookFormView from '@/views/BookFormView.vue';
+import MovieShelfView from '@/views/MovieShelfView.vue';
+import MovieDetailView from '@/views/MovieDetailView.vue';
+import MovieFormView from '@/views/MovieFormView.vue';
 import ReviewsView from '@/views/ReviewsView.vue';
 import ProfileView from '@/views/ProfileView.vue';
 import LoginView from '@/views/LoginView.vue';
@@ -53,6 +56,30 @@ const router = createRouter({
       path: '/livros/:id/editar',
       name: 'book-edit',
       component: BookFormView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/filmes',
+      name: 'movies-shelf',
+      component: MovieShelfView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/filmes/novo',
+      name: 'movie-create',
+      component: MovieFormView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/filmes/:id',
+      name: 'movie-detail',
+      component: MovieDetailView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/filmes/:id/editar',
+      name: 'movie-edit',
+      component: MovieFormView,
       meta: { requiresAuth: true },
     },
     {
