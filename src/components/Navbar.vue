@@ -6,14 +6,29 @@ import { useBooksStore } from '@/stores/books';
 import { useMoviesStore } from '@/stores/movies';
 import { useStatsStore } from '@/stores/stats';
 import { useSuggestionsStore } from '@/stores/suggestions';
+import { useWritingsStore } from '@/stores/writings';
 import { useTheme } from '@/composables/useTheme';
-import { BookOpen, Library, Film, User, LogOut, Menu, X, Sun, Moon, Sparkles } from 'lucide-vue-next';
+import {
+  LayoutDashboard,
+  BookOpen,
+  Film,
+  MessageSquareQuote,
+  Feather,
+  Sparkles,
+  User,
+  LogOut,
+  Menu,
+  X,
+  Sun,
+  Moon,
+} from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const booksStore = useBooksStore();
 const moviesStore = useMoviesStore();
 const statsStore = useStatsStore();
 const suggestionsStore = useSuggestionsStore();
+const writingsStore = useWritingsStore();
 const router = useRouter();
 const { theme, toggleTheme } = useTheme();
 
@@ -25,6 +40,7 @@ async function handleLogout() {
   moviesStore.reset();
   statsStore.reset();
   suggestionsStore.reset();
+  writingsStore.reset();
   router.push('/login');
 }
 </script>
@@ -49,7 +65,10 @@ async function handleLogout() {
               class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-[#1e293b] transition-colors"
               active-class="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold"
             >
-              Dashboard
+              <span class="flex items-center gap-1.5">
+                <LayoutDashboard class="w-4 h-4 text-emerald-500" />
+                Dashboard
+              </span>
             </RouterLink>
             <RouterLink
               to="/estante"
@@ -57,7 +76,7 @@ async function handleLogout() {
               active-class="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold"
             >
               <span class="flex items-center gap-1.5">
-                <Library class="w-4 h-4" />
+                <BookOpen class="w-4 h-4 text-emerald-500" />
                 Livros
               </span>
             </RouterLink>
@@ -67,7 +86,7 @@ async function handleLogout() {
               active-class="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold"
             >
               <span class="flex items-center gap-1.5">
-                <Film class="w-4 h-4" />
+                <Film class="w-4 h-4 text-emerald-500" />
                 Filmes
               </span>
             </RouterLink>
@@ -76,7 +95,20 @@ async function handleLogout() {
               class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-[#1e293b] transition-colors"
               active-class="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold"
             >
-              Resenhas
+              <span class="flex items-center gap-1.5">
+                <MessageSquareQuote class="w-4 h-4 text-emerald-500" />
+                Resenhas
+              </span>
+            </RouterLink>
+            <RouterLink
+              to="/escritas"
+              class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-[#1e293b] transition-colors"
+              active-class="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold"
+            >
+              <span class="flex items-center gap-1.5">
+                <Feather class="w-4 h-4 text-emerald-500" />
+                Escritas
+              </span>
             </RouterLink>
             <RouterLink
               to="/sugestoes"
@@ -154,28 +186,50 @@ async function handleLogout() {
         @click="isMobileMenuOpen = false"
         class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1e293b]"
       >
-        Dashboard
+        <span class="flex items-center gap-2">
+          <LayoutDashboard class="w-4 h-4 text-emerald-500" />
+          Dashboard
+        </span>
       </RouterLink>
       <RouterLink
         to="/estante"
         @click="isMobileMenuOpen = false"
         class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1e293b]"
       >
-        Livros
+        <span class="flex items-center gap-2">
+          <BookOpen class="w-4 h-4 text-emerald-500" />
+          Livros
+        </span>
       </RouterLink>
       <RouterLink
         to="/filmes"
         @click="isMobileMenuOpen = false"
         class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1e293b]"
       >
-        Filmes
+        <span class="flex items-center gap-2">
+          <Film class="w-4 h-4 text-emerald-500" />
+          Filmes
+        </span>
       </RouterLink>
       <RouterLink
         to="/resenhas"
         @click="isMobileMenuOpen = false"
         class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1e293b]"
       >
-        Resenhas
+        <span class="flex items-center gap-2">
+          <MessageSquareQuote class="w-4 h-4 text-emerald-500" />
+          Resenhas
+        </span>
+      </RouterLink>
+      <RouterLink
+        to="/escritas"
+        @click="isMobileMenuOpen = false"
+        class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1e293b]"
+      >
+        <span class="flex items-center gap-2">
+          <Feather class="w-4 h-4 text-emerald-500" />
+          Escritas
+        </span>
       </RouterLink>
       <RouterLink
         to="/sugestoes"

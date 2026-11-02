@@ -10,6 +10,9 @@ import MovieDetailView from '@/views/MovieDetailView.vue';
 import MovieFormView from '@/views/MovieFormView.vue';
 import ReviewsView from '@/views/ReviewsView.vue';
 import SuggestionsView from '@/views/SuggestionsView.vue';
+import WritingsView from '@/views/WritingsView.vue';
+import WritingFormView from '@/views/WritingFormView.vue';
+import WritingDetailView from '@/views/WritingDetailView.vue';
 import ProfileView from '@/views/ProfileView.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
@@ -93,6 +96,30 @@ const router = createRouter({
       path: '/sugestoes',
       name: 'suggestions',
       component: SuggestionsView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/escritas',
+      name: 'writings',
+      component: WritingsView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/escritas/nova',
+      name: 'writing-create',
+      component: WritingFormView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/escritas/:id',
+      name: 'writing-detail',
+      component: WritingDetailView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/escritas/:id/editar',
+      name: 'writing-edit',
+      component: WritingFormView,
       meta: { requiresAuth: true },
     },
     {

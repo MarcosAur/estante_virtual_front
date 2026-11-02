@@ -153,3 +153,26 @@ export interface BatchImportResult {
   created: SuggestedMedia[];
   skipped: SuggestedMedia[];
 }
+
+export type WritingKind = 'reflection' | 'reading' | 'note' | 'free';
+
+export interface WritingEntry {
+  id: string;
+  kind: WritingKind;
+  title: string | null;
+  body: string;
+  entry_date: string;
+  source_label: string | null;
+  mood: string | null;
+  created_at: string;
+  updated_at: string;
+  tags?: Tag[];
+}
+
+export interface WritingSummary {
+  total: number;
+  by_kind: Record<WritingKind, number>;
+  entries_this_month: number;
+  current_streak: number;
+  longest_streak: number;
+}
