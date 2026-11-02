@@ -5,13 +5,15 @@ import { useAuthStore } from '@/stores/auth';
 import { useBooksStore } from '@/stores/books';
 import { useMoviesStore } from '@/stores/movies';
 import { useStatsStore } from '@/stores/stats';
+import { useSuggestionsStore } from '@/stores/suggestions';
 import { useTheme } from '@/composables/useTheme';
-import { BookOpen, Library, Film, User, LogOut, Menu, X, Sun, Moon } from 'lucide-vue-next';
+import { BookOpen, Library, Film, User, LogOut, Menu, X, Sun, Moon, Sparkles } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const booksStore = useBooksStore();
 const moviesStore = useMoviesStore();
 const statsStore = useStatsStore();
+const suggestionsStore = useSuggestionsStore();
 const router = useRouter();
 const { theme, toggleTheme } = useTheme();
 
@@ -22,6 +24,7 @@ async function handleLogout() {
   booksStore.reset();
   moviesStore.reset();
   statsStore.reset();
+  suggestionsStore.reset();
   router.push('/login');
 }
 </script>
@@ -74,6 +77,16 @@ async function handleLogout() {
               active-class="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold"
             >
               Resenhas
+            </RouterLink>
+            <RouterLink
+              to="/sugestoes"
+              class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-[#1e293b] transition-colors"
+              active-class="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold"
+            >
+              <span class="flex items-center gap-1.5">
+                <Sparkles class="w-4 h-4 text-emerald-500" />
+                Sugestões
+              </span>
             </RouterLink>
           </nav>
         </div>
@@ -163,6 +176,16 @@ async function handleLogout() {
         class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1e293b]"
       >
         Resenhas
+      </RouterLink>
+      <RouterLink
+        to="/sugestoes"
+        @click="isMobileMenuOpen = false"
+        class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1e293b]"
+      >
+        <span class="flex items-center gap-2">
+          <Sparkles class="w-4 h-4 text-emerald-500" />
+          Sugestões
+        </span>
       </RouterLink>
       <RouterLink
         to="/livros/novo"

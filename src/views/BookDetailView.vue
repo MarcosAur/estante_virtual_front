@@ -244,21 +244,41 @@ async function handleDeleteBook() {
             </div>
           </div>
 
-          <!-- Shelf Status & Reading Progress Card -->
+          <!-- Status do Livro Card -->
+          <div class="bg-slate-50 dark:bg-[#1e293b]/70 rounded-xl p-4 border border-slate-200 dark:border-[#31394d] space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Status do Livro
+              </label>
+              <span v-if="book.status === 'read' && book.finished_at" class="text-xs text-slate-500 dark:text-slate-400">
+                Concluído em: <strong>{{ book.finished_at }}</strong>
+              </span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <button
+                v-for="opt in statusOptions"
+                :key="opt.value"
+                @click="handleQuickStatusChange(opt.value)"
+                type="button"
+                class="py-2 px-3 text-xs sm:text-sm font-semibold rounded-xl border transition-all text-center cursor-pointer"
+                :class="[
+                  book.status === opt.value
+                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                    : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-[#31394d] hover:border-slate-300 dark:hover:border-slate-600'
+                ]"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Reading Progress Card -->
           <div class="bg-slate-50 dark:bg-[#1e293b]/70 rounded-xl p-4 border border-slate-200 dark:border-[#31394d] space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-3">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Status na Estante:</span>
-                <select
-                  :value="book.status"
-                  @change="(e: any) => handleQuickStatusChange(e.target.value)"
-                  class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-[#31394d] bg-white dark:bg-[#131b2e] text-slate-800 dark:text-[#f8fafc] focus:ring-2 focus:ring-emerald-500"
-                >
-                  <option v-for="opt in statusOptions" :key="opt.value" :value="opt.value">
-                    {{ opt.label }}
-                  </option>
-                </select>
-              </div>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Progresso de Leitura
+              </span>
 
               <button
                 @click="isUpdatingProgress = !isUpdatingProgress"
@@ -275,7 +295,7 @@ async function handleDeleteBook() {
 
             <!-- Expandable Progress form -->
             <div v-if="isUpdatingProgress" class="pt-3 border-t border-slate-200 dark:border-[#31394d] space-y-3">
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label class="block text-xs font-medium text-slate-600 dark:text-slate-300">Página atual</label>
                   <input
@@ -285,17 +305,6 @@ async function handleDeleteBook() {
                     :max="book.pages || 9999"
                     class="mt-1 w-full px-2.5 py-1.5 text-xs border border-slate-300 dark:border-[#31394d] rounded-lg bg-white dark:bg-[#131b2e] text-slate-900 dark:text-[#f8fafc] focus:ring-2 focus:ring-emerald-500"
                   />
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-600 dark:text-slate-300">Status</label>
-                  <select
-                    v-model="editStatus"
-                    class="mt-1 w-full px-2.5 py-1.5 text-xs border border-slate-300 dark:border-[#31394d] rounded-lg bg-white dark:bg-[#131b2e] text-slate-900 dark:text-[#f8fafc] focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option v-for="opt in statusOptions" :key="opt.value" :value="opt.value">
-                      {{ opt.label }}
-                    </option>
-                  </select>
                 </div>
                 <div>
                   <label class="block text-xs font-medium text-slate-600 dark:text-slate-300">Data de conclusão</label>

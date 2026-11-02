@@ -4,8 +4,8 @@ import { useRoute, useRouter, RouterLink } from 'vue-router';
 import { moviesApi } from '@/api/movies';
 import { tagsApi } from '@/api/tags';
 import { useMoviesStore } from '@/stores/movies';
-import type { MovieStatus, ExternalMovieLookup, Tag } from '@/types';
-import { Search, Sparkles, ArrowLeft, Check, Upload, Trash2, Film } from 'lucide-vue-next';
+import type { MovieStatus, Tag } from '@/types';
+import { ArrowLeft, Check, Upload, Trash2 } from 'lucide-vue-next';
 import AuthImage from '@/components/AuthImage.vue';
 
 const route = useRoute();
@@ -35,12 +35,6 @@ const removePosterRequested = ref(false);
 const fileInputRef = ref<HTMLInputElement | null>(null);
 const posterError = ref('');
 const isDragging = ref(false);
-
-// Lookup state
-const lookupQuery = ref('');
-const lookupResults = ref<ExternalMovieLookup[]>([]);
-const isSearchingLookup = ref(false);
-const showLookupResults = ref(false);
 
 // Tags
 const availableTags = ref<Tag[]>([]);
@@ -142,35 +136,6 @@ function removePoster() {
   posterError.value = '';
 }
 
-async function handleSearchLookup() {
-  if (!lookupQuery.value.trim()) return;
-  isSearchingLookup.value = true;
-  showLookupResults.value = true;
-  try {
-    lookupResults.value = await moviesApi.lookupMovies({
-      q: lookupQuery.value.trim(),
-    });
-  } catch {
-    lookupResults.value = [];
-  } finally {
-    isSearchingLookup.value = false;
-  }
-}
-
-function applyLookupData(item: ExternalMovieLookup) {
-  title.value = item.title;
-  if (item.director) director.value = item.director;
-  if (item.year) year.value = item.year;
-  if (item.runtime_minutes) runtimeMinutes.value = item.runtime_minutes;
-  if (item.genre) genre.value = item.genre;
-  if (item.synopsis) synopsis.value = item.synopsis;
-  if (item.tmdb_id) tmdbId.value = item.tmdb_id;
-  if (item.poster_url && !posterFile.value) {
-    externalPosterUrl.value = item.poster_url;
-  }
-  showLookupResults.value = false;
-}
-
 async function handleCreateTag() {
   if (!newTagName.value.trim()) return;
   creatingTag.value = true;
@@ -253,75 +218,8 @@ async function handleSubmit() {
           {{ isEditing ? 'Editar Filme' : 'Adicionar Filme' }}
         </h1>
         <p class="text-sm text-slate-500 dark:text-[#94a3b8]">
-          {{ isEditing ? 'Atualize as informações do filme' : 'Cadastre um filme manualmente ou busque via TMDB' }}
+          {{ isEditing ? 'Atualize as informações do filme' : 'Cadastre um filme manualmente' }}
         </p>
-      </div>
-    </div>
-
-    <!-- Smart TMDB Lookup Box (only when creating) -->
-    <div v-if="!isEditing" class="bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl p-5 space-y-3">
-      <div class="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-semibold text-sm">
-        <Sparkles class="w-4 h-4" />
-        Preenchimento Automático via TMDB
-      </div>
-      <p class="text-xs text-slate-600 dark:text-slate-300">
-        Digite o nome do filme para preencher automaticamente título, ano, sinopse, gênero e pôster.
-      </p>
-
-      <div class="flex gap-2">
-        <div class="relative flex-1">
-          <input
-            v-model="lookupQuery"
-            @keydown.enter.prevent="handleSearchLookup"
-            type="text"
-            placeholder="Ex: Interestelar, Matrix, O Poderoso Chefão..."
-            class="w-full px-3.5 py-2.5 bg-white dark:bg-[#131b2e] border border-emerald-300 dark:border-emerald-700/60 rounded-xl text-sm text-slate-900 dark:text-[#f8fafc] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
-        <button
-          type="button"
-          @click="handleSearchLookup"
-          :disabled="isSearchingLookup || !lookupQuery.trim()"
-          class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white font-semibold text-sm rounded-xl shadow-xs transition-colors disabled:opacity-50"
-        >
-          <Search class="w-4 h-4" />
-          {{ isSearchingLookup ? 'Buscando...' : 'Buscar' }}
-        </button>
-      </div>
-
-      <!-- Lookup Results dropdown/cards -->
-      <div v-if="showLookupResults && lookupResults.length > 0" class="mt-3 bg-white dark:bg-[#131b2e] rounded-xl border border-slate-200 dark:border-[#1e293b] p-2 max-h-72 overflow-y-auto space-y-1 shadow-md">
-        <div
-          v-for="res in lookupResults"
-          :key="res.tmdb_id"
-          @click="applyLookupData(res)"
-          class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-[#1e293b] cursor-pointer transition-colors"
-        >
-          <img
-            v-if="res.poster_url"
-            :src="res.poster_url"
-            alt="Capa"
-            class="w-10 h-14 object-cover rounded-md bg-slate-100 shrink-0"
-          />
-          <div v-else class="w-10 h-14 bg-slate-200 dark:bg-[#1e293b] rounded-md flex items-center justify-center shrink-0">
-            <Film class="w-5 h-5 text-slate-400" />
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="font-bold text-sm text-slate-900 dark:text-[#f8fafc] truncate">{{ res.title }}</div>
-            <div class="text-xs text-slate-500 dark:text-[#94a3b8] truncate">
-              {{ [res.year, res.genre].filter(Boolean).join(' • ') }}
-            </div>
-          </div>
-          <button
-            type="button"
-            class="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 text-xs font-semibold rounded-md shrink-0"
-          >
-            Usar
-          </button>
-        </div>
-      </div>
-      <div v-else-if="showLookupResults && !isSearchingLookup" class="text-xs text-slate-500 italic mt-2">
-        Nenhum filme encontrado. Você pode preencher os campos abaixo manualmente.
       </div>
     </div>
 

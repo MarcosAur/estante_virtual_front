@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import type { Book, ExternalBookLookup } from '@/types';
+import type { Book } from '@/types';
 
 export interface BookFilterParams {
   status?: string;
@@ -55,11 +55,6 @@ export const booksApi = {
 
   async deleteCover(id: string) {
     const res = await apiClient.delete<{ data: Book }>(`/books/${id}/cover`);
-    return res.data.data;
-  },
-
-  async lookupBooks(params: { isbn?: string; q?: string }) {
-    const res = await apiClient.get<{ data: ExternalBookLookup[] }>('/lookup/books', { params });
     return res.data.data;
   },
 };

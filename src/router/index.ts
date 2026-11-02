@@ -9,6 +9,7 @@ import MovieShelfView from '@/views/MovieShelfView.vue';
 import MovieDetailView from '@/views/MovieDetailView.vue';
 import MovieFormView from '@/views/MovieFormView.vue';
 import ReviewsView from '@/views/ReviewsView.vue';
+import SuggestionsView from '@/views/SuggestionsView.vue';
 import ProfileView from '@/views/ProfileView.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
@@ -86,6 +87,12 @@ const router = createRouter({
       path: '/resenhas',
       name: 'reviews',
       component: ReviewsView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/sugestoes',
+      name: 'suggestions',
+      component: SuggestionsView,
       meta: { requiresAuth: true },
     },
     {

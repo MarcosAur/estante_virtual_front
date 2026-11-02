@@ -119,24 +119,37 @@ export interface Stats {
   movie_ratings_distribution?: Record<string, number>;
 }
 
-export interface ExternalBookLookup {
+export type SuggestedMediaStatus = 'suggested' | BookStatus | MovieStatus;
+
+export interface SuggestedMedia {
+  id: string;
+  suggestion_id: string;
+  position: number;
   title: string;
-  author: string;
-  publisher: string | null;
+  creator: string | null;
   year: number | null;
-  pages: number;
   synopsis: string | null;
-  isbn: string | null;
-  cover_url: string | null;
+  reason: string | null;
+  status: SuggestedMediaStatus;
+  mediable_type: 'book' | 'movie' | null;
+  mediable_id: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface ExternalMovieLookup {
-  tmdb_id: string;
-  title: string;
-  director: string | null;
-  year: number | null;
-  runtime_minutes: number;
-  genre: string | null;
-  synopsis: string | null;
-  poster_url: string | null;
+export interface Suggestion {
+  id: string;
+  type: 'book' | 'movie';
+  prompt: string;
+  model: string;
+  media: SuggestedMedia[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BatchImportResult {
+  created_count: number;
+  skipped_count: number;
+  created: SuggestedMedia[];
+  skipped: SuggestedMedia[];
 }

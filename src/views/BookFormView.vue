@@ -4,8 +4,8 @@ import { useRoute, useRouter, RouterLink } from 'vue-router';
 import { booksApi } from '@/api/books';
 import { tagsApi } from '@/api/tags';
 import { useBooksStore } from '@/stores/books';
-import type { BookStatus, ExternalBookLookup, Tag } from '@/types';
-import { Search, Sparkles, ArrowLeft, Check, Upload, Trash2 } from 'lucide-vue-next';
+import type { BookStatus, Tag } from '@/types';
+import { ArrowLeft, Check, Upload, Trash2 } from 'lucide-vue-next';
 import AuthImage from '@/components/AuthImage.vue';
 
 const route = useRoute();
@@ -34,12 +34,6 @@ const removeCoverRequested = ref(false);
 const fileInputRef = ref<HTMLInputElement | null>(null);
 const coverError = ref('');
 const isDragging = ref(false);
-
-// Lookup state
-const lookupQuery = ref('');
-const lookupResults = ref<ExternalBookLookup[]>([]);
-const isSearchingLookup = ref(false);
-const showLookupResults = ref(false);
 
 // Tags
 const availableTags = ref<Tag[]>([]);
@@ -138,32 +132,6 @@ function removeSelectedCover() {
   coverError.value = '';
 }
 
-async function handleSearchLookup() {
-  if (!lookupQuery.value.trim()) return;
-  isSearchingLookup.value = true;
-  showLookupResults.value = true;
-  try {
-    const isIsbn = /^[0-9X-]{9,}$/i.test(lookupQuery.value.trim());
-    lookupResults.value = await booksApi.lookupBooks({
-      isbn: isIsbn ? lookupQuery.value.trim() : undefined,
-      q: !isIsbn ? lookupQuery.value.trim() : undefined,
-    });
-  } finally {
-    isSearchingLookup.value = false;
-  }
-}
-
-function applyLookupData(item: ExternalBookLookup) {
-  title.value = item.title;
-  author.value = item.author;
-  if (item.isbn) isbn.value = item.isbn;
-  if (item.publisher) publisher.value = item.publisher;
-  if (item.year) year.value = item.year;
-  if (item.pages) pages.value = item.pages;
-  if (item.synopsis) synopsis.value = item.synopsis;
-  showLookupResults.value = false;
-}
-
 async function handleCreateTag() {
   if (!newTagName.value.trim()) return;
   creatingTag.value = true;
@@ -252,61 +220,7 @@ async function handleSubmit() {
           {{ isEditing ? 'Editar Livro' : 'Cadastrar Novo Livro' }}
         </h1>
         <p class="text-sm text-slate-500 dark:text-[#94a3b8]">
-          Preencha os dados do livro ou busque automaticamente pelo Google Books
-        </p>
-      </div>
-
-      <!-- Google Books API Auto-Lookup box -->
-      <div v-if="!isEditing" class="p-4 bg-emerald-50/60 dark:bg-emerald-950/20 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40 space-y-3">
-        <div class="flex items-center gap-2 text-emerald-900 dark:text-emerald-300 font-semibold text-xs">
-          <Sparkles class="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          <span>Preenchimento Automático via Google Books</span>
-        </div>
-
-        <div class="flex gap-2">
-          <input
-            v-model="lookupQuery"
-            @keyup.enter="handleSearchLookup"
-            type="text"
-            placeholder="Digite o título do livro ou o código ISBN..."
-            class="flex-1 px-3 py-2 text-sm border border-slate-300 dark:border-[#31394d] rounded-lg bg-white dark:bg-[#131b2e] text-slate-900 dark:text-[#f8fafc] focus:ring-2 focus:ring-emerald-500"
-          />
-          <button
-            @click="handleSearchLookup"
-            :disabled="isSearchingLookup || !lookupQuery.trim()"
-            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white rounded-lg text-sm font-semibold flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
-          >
-            <Search class="w-4 h-4" />
-            <span v-if="isSearchingLookup">Buscando...</span>
-            <span v-else>Buscar</span>
-          </button>
-        </div>
-
-        <!-- Lookup Results Dropdown -->
-        <div v-if="showLookupResults && lookupResults.length > 0" class="mt-2 bg-white dark:bg-[#1e293b] rounded-xl border border-slate-200 dark:border-[#31394d] divide-y divide-slate-100 dark:divide-[#31394d] max-h-60 overflow-y-auto shadow-md">
-          <div
-            v-for="(item, idx) in lookupResults"
-            :key="idx"
-            @click="applyLookupData(item)"
-            class="p-3 flex items-center justify-between hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 cursor-pointer transition-colors"
-          >
-            <div class="flex items-center gap-3">
-              <img
-                v-if="item.cover_url"
-                :src="item.cover_url"
-                class="w-8 h-12 object-cover rounded shadow-xs"
-              />
-              <div class="text-left">
-                <div class="font-semibold text-xs text-slate-900 dark:text-[#f8fafc]">{{ item.title }}</div>
-                <div class="text-[11px] text-slate-500 dark:text-[#94a3b8]">{{ item.author }} ({{ item.year || 's/ano' }}) - {{ item.pages }} págs</div>
-              </div>
-            </div>
-            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Preencher</span>
-          </div>
-        </div>
-
-        <p v-else-if="showLookupResults && !isSearchingLookup" class="text-xs text-slate-500 dark:text-[#94a3b8] italic">
-          Nenhum resultado encontrado. Você pode preencher os campos manualmente abaixo.
+          Preencha os dados do livro
         </p>
       </div>
 

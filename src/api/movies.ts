@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import type { Movie, MovieStatus, ExternalMovieLookup } from '@/types';
+import type { Movie, MovieStatus } from '@/types';
 
 export interface MovieFilterParams {
   status?: string;
@@ -90,11 +90,6 @@ export const moviesApi = {
 
   async deletePoster(id: string) {
     const res = await apiClient.delete<{ data: Movie }>(`/movies/${id}/poster`);
-    return res.data.data;
-  },
-
-  async lookupMovies(params: { q: string }) {
-    const res = await apiClient.get<{ data: ExternalMovieLookup[] }>('/lookup/movies', { params });
     return res.data.data;
   },
 };
